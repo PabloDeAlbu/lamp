@@ -1,0 +1,41 @@
+version: '3'
+services:
+    php-apache:
+        container_name: "${PROJECT_NAME}_apache"
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        ports:
+            - 80:80
+        volumes:
+            - ./data/var/www/html:/var/www/html
+        depends_on:
+            - 'mariadb'
+
+    phpmyadmin:
+        container_name: "${PROJECT_NAME}_phpmyadmin"
+        image: phpmyadmin/phpmyadmin
+        ports:
+        - '8082:80'
+        environment:
+            PMA_HOST: mariadb
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        depends_on:
+        - mariadb
+      
+    mariadb:
+        container_name: "${PROJECT_NAME}_mariadb"
+        image: mariadb:10.1
+        volumes:
+            - ./data/mariadb-init:/docker-entrypoint-initdb.d # Place init .sql file(s) here.
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: "no"
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_USER: ${DB_USER}
+            MYSQL_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_DATABASE: ${DB_NAME}
+        ports:
+            - '33061:3306'
+
+volumes:
+    mariadb:

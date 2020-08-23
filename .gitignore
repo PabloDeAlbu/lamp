@@ -1,0 +1,3 @@
+# ignore everything in the doc root 
+!data/var/www/html/
+!data/backups/
