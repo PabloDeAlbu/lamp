@@ -8,9 +8,10 @@ services:
         ports:
             - 80:80
         volumes:
-            - ./data/var/www/html:/var/www/html
+            - ./data/var/www/angra:/var/www/angra
+            - ./wp-config.LOCAL.php:/var/www/angra/wp-config.php
         depends_on:
-            - 'mariadb'
+            - mariadb
 
     phpmyadmin:
         container_name: "${PROJECT_NAME}_phpmyadmin"
